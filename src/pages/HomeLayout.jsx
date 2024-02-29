@@ -1,15 +1,15 @@
 import { Outlet } from "react-router-dom"
+import Navbar from "../components/Navbar"
 
 function HomeLayout() {
   return (
-    <div>
-      <nav><h2>Nav bar</h2></nav>
-      {/* <h1>HomeLayout</h1> */}
-      <Outlet/>
-      <footer>
-        <h3>Footer</h3>
-      </footer>
-    </div>
+    <>
+      <Navbar/>
+      <section className="page">
+        <Outlet/>
+      </section>
+      
+    </>
   )
 }
 

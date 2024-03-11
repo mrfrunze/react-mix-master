@@ -1,5 +1,5 @@
 import axios from "axios"
-import { Link, useLoaderData } from "react-router-dom"
+import { Link, useLoaderData, Navigate } from "react-router-dom"
 import Wrapper from "../assets/wrappers/CocktailPage"
 const singleCocktailUrl = 'https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=';
 
@@ -14,8 +14,11 @@ export const loader = async ({params}) =>{
 const Cocktail = () => {
   const {id, data} = useLoaderData()
 
+  // Navigate to="/" - always back home page !!!
+  // if(!data) return <Navigate to="/" />
+
   const singleDrink = data.drinks[0]
-  console.log(singleDrink);
+  // console.log(singleDrink);
 
   const {
     strDrink: name,
@@ -25,6 +28,12 @@ const Cocktail = () => {
     strGlass: glass,
     strInstructions: instructions,
     } = singleDrink
+    // console.log(singleDrink);
+
+    const validIngredients = Object.keys(singleDrink)
+      .filter(key => key.startsWith('strIngredient') && singleDrink[key] !== null)
+      .map(key => singleDrink[key])
+    // console.log(validIngredients);
 
 
   return (
@@ -49,6 +58,15 @@ const Cocktail = () => {
           </p>
           <p>
             <span className="drink-data">glass :</span> {glass}
+          </p>
+          <p>
+          <span className="drink-data">ingredients :</span> {
+              validIngredients.map((item, idx) => {
+                return <span className="ing" key={item}>
+                  {item}{idx < validIngredients.length - 1 ? ", " : "" }
+                </span>
+              })
+            }
           </p>
           <p>
             <span className="drink-data">instructions :</span> {instructions}

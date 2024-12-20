@@ -2,11 +2,17 @@ import Wrapper from "../assets/wrappers/CocktailList"
 import CocktailCard from "./CocktailCard"
 
 const CocktailList = ({drinks}) => {
-  if(!drinks) {
+  if(!Array.isArray(drinks) || drinks.length === 0) {
     return (
-    <h4 style={{textAlign: "center"}}>
-      No matching cocktails found...
-    </h4>)
+      <>
+        <h4 style={{textAlign: "center"}}>
+          No matching 👋 cocktails found 🥺...
+        </h4>
+        <h5 style={{textAlign: "center", lineHeight:"1.8", fontSize:"25px"}}>Please reload page 👌</h5>
+
+      </>
+     
+    )
   }
 
   const formattedDrinks = drinks.map(item => {

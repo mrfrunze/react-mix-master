@@ -7,19 +7,23 @@ import { useQuery } from "@tanstack/react-query";
 const cocktailSearchUrl =
   "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=";
 
+const defaultLetterUrl =
+  "https://thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail";
+
 const searchCocktailsQuery = (searchTerm) => {
+  const apiUrl = searchTerm
+    ? `${cocktailSearchUrl}${searchTerm}`
+    : defaultLetterUrl;
+
   return {
-    queryKey: ["search", searchTerm || "all"],
+    queryKey: ["cocktails", searchTerm || "default"],
     queryFn: async () => {
-      const response = await axios.get(`${cocktailSearchUrl}${searchTerm}`);
+      const response = await axios.get(apiUrl);
+      const drinksData = response.data.drinks;
       // console.log("API response:", response.data);
 
-      // Гарантируем, что вернется массив, даже если drinks = null или другая ошибка
-      if (!response.data.drinks || typeof response.data.drinks !== "object") {
-        return [];
-      }
-
-      return response.data.drinks;
+      // Гарантируем массив
+      return Array.isArray(drinksData) ? drinksData : [];
     },
   };
 };
@@ -29,20 +33,31 @@ export const loader =
   async ({ request }) => {
     const url = new URL(request.url);
 
-    const rawSearchTerm = url.searchParams.get("search");
-    const searchTerm =
-      rawSearchTerm && rawSearchTerm.trim() !== "" ? rawSearchTerm : "all";
-    // console.log("Final search term:", searchTerm); // Лог для проверки
+    const searchTerm = url.searchParams.get("search") || "";
 
-    // Запрашиваем данные только при необходимости
+    // Предзагрузка данных в кэш
     await queryClient.ensureQueryData(searchCocktailsQuery(searchTerm));
-    return { searchTerm: rawSearchTerm || "" };
+    return {searchTerm}
   };
 
 const Landing = () => {
   const { searchTerm } = useLoaderData();
   // console.log(drinks);
-  const { data: drinks } = useQuery(searchCocktailsQuery(searchTerm));
+    // Запрос через React Query
+  const {
+    data: drinks = [],
+    isLoading,
+    isError,
+  } = useQuery(searchCocktailsQuery(searchTerm));
+
+  if (isLoading) {
+    return <p style={{ textAlign: "center" }}>Loading cocktails...</p>;
+  }
+
+  if (isError) {
+    return <p style={{ textAlign: "center", color: "red" }}>Failed to load cocktails</p>;
+  }
+
 
   return (
     <>

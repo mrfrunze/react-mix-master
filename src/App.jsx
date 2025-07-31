@@ -62,6 +62,5 @@ const App = () => {
     <RouterProvider router={router} />
     {/* <ReactQueryDevtools initialIsOpen={false}/> */}
   </QueryClientProvider>
-  
 };
 export default App;

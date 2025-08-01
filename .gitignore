@@ -9,6 +9,7 @@ lerna-debug.log*
 
 # Ignore all files with the specified name.
 README_info.md
+README_test-info.md
 
 node_modules
 dist

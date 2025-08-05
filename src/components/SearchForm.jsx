@@ -1,5 +1,6 @@
 import { Form, useNavigation } from 'react-router-dom'
 import Wrapper from '../assets/wrappers/SearchForm'
+import React from 'react'
 
 const SearchForm = ({searchTerm}) => {
   const navigation = useNavigation()

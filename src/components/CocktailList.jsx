@@ -1,5 +1,6 @@
 import Wrapper from "../assets/wrappers/CocktailList"
 import CocktailCard from "./CocktailCard"
+import React from "react";
 
 const CocktailList = ({drinks}) => {
   if(!Array.isArray(drinks) || drinks.length === 0) {
